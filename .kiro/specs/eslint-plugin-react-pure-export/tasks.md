@@ -203,22 +203,22 @@
   - 运行所有属性测试，确保通过
   - 如有问题，询问用户
 
-- [ ] 8. 创建 Vite playground 进行真实项目测试
-  - [ ] 8.1 初始化 playground 项目
+- [-] 8. 创建 Vite playground 进行真实项目测试
+  - [x] 8.1 初始化 playground 项目
     - 创建 playground/package.json
     - 配置 Vite + React + TypeScript
     - 安装依赖（react, react-dom, vite, @vitejs/plugin-react）
     - 创建 playground/vite.config.js
     - _Requirements: 6.4_
 
-  - [ ] 8.2 配置 ESLint 使用插件
+  - [x] 8.2 配置 ESLint 使用插件
     - 创建 playground/.eslintrc.cjs
     - 配置使用本地插件（通过相对路径）
     - 配置 @typescript-eslint/parser
     - 启用所有三个规则
     - _Requirements: 4.2, 4.3_
 
-  - [ ] 8.3 创建测试用例文件
+  - [x] 8.3 创建测试用例文件
     - 创建 playground/src/components/ValidComponent.tsx（应该通过）
     - 创建 playground/src/components/InvalidComponent.tsx（应该报错）
     - 创建 playground/src/utils/helpers.pure.ts（pure module）
@@ -226,7 +226,7 @@
     - 创建 playground/src/config/constants.config.ts（pure module）
     - _Requirements: 6.4_
 
-  - [ ] 8.4 验证 playground 中的规则行为
+  - [-] 8.4 验证 playground 中的规则行为
     - 运行 ESLint 检查 playground 代码
     - 验证 ValidComponent.tsx 没有错误
     - 验证 InvalidComponent.tsx 有预期错误
