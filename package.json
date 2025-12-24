@@ -29,8 +29,7 @@
     "test": "node tests/run-all-tests.js",
     "test:rules": "node tests/rules/run-rule-tests.js",
     "test:utils": "node tests/utils/run-util-tests.js",
-    "lint": "eslint lib tests",
-    "playground": "cd playground && pnpm run dev"
+    "lint": "eslint lib tests"
   },
   "peerDependencies": {
     "eslint": ">=8.0.0"

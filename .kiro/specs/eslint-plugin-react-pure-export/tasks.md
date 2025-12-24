@@ -233,8 +233,8 @@
     - 验证 invalid.pure.ts 有预期错误
     - _Requirements: 6.4_
 
-- [ ] 9. 创建文档
-  - [ ] 9.1 编写英文 README.md
+- [x] 9. 创建文档
+  - [x] 9.1 编写英文 README.md
     - 项目介绍和目标
     - 安装说明
     - 使用示例（Legacy Config 和 Flat Config）
@@ -243,7 +243,7 @@
     - 贡献指南链接
     - _Requirements: 7.1, 7.3, 7.8_
 
-  - [ ] 9.2 编写中文 README_CN.md
+  - [x] 9.2 编写中文 README_CN.md
     - 项目介绍和目标（中文）
     - 安装说明（中文）
     - 使用示例（中文）
@@ -251,14 +251,14 @@
     - 贡献指南链接
     - _Requirements: 7.2, 7.8_
 
-  - [ ] 9.3 编写规则文档
+  - [x] 9.3 编写规则文档
     - 创建 docs/rules/no-non-component-export-in-tsx.md
     - 创建 docs/rules/no-tsx-import-in-pure-module.md
     - 创建 docs/rules/no-heavy-deps-in-pure-module.md
     - 每个文档包含：规则说明、示例、配置选项
     - _Requirements: 5.5, 7.8_
 
-  - [ ] 9.4 编写贡献指南
+  - [x] 9.4 编写贡献指南
     - 创建 CONTRIBUTING.md
     - 说明开发环境设置
     - 说明测试运行方式
