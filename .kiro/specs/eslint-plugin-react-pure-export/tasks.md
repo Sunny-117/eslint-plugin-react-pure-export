@@ -265,7 +265,7 @@
     - 说明 PR 提交流程
     - _Requirements: 7.5_
 
-- [ ] 10. Final checkpoint - 最终验证
+- [x] 10. Final checkpoint - 最终验证
   - 运行所有测试，确保 100% 通过
   - 在 playground 中手动测试所有规则
   - 验证文档完整性和准确性
