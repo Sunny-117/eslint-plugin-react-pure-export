@@ -1,0 +1,50 @@
+{
+  "name": "eslint-plugin-react-pure-export",
+  "version": "0.0.1",
+  "description": "ESLint plugin to enforce separation between React components and pure logic modules",
+  "main": "lib/index.js",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "react",
+    "typescript",
+    "pure-module",
+    "fast-refresh"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sunny-117/eslint-plugin-react-pure-export.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sunny-117/eslint-plugin-react-pure-export/issues"
+  },
+  "homepage": "https://github.com/Sunny-117/eslint-plugin-react-pure-export#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "test": "node tests/run-all-tests.js",
+    "test:rules": "node tests/rules/run-rule-tests.js",
+    "test:utils": "node tests/utils/run-util-tests.js",
+    "lint": "eslint lib tests",
+    "playground": "cd playground && pnpm run dev"
+  },
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  },
+  "dependencies": {
+    "@typescript-eslint/parser": "^6.0.0 || ^7.0.0 || ^8.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  },
+  "files": [
+    "lib",
+    "README.md",
+    "README_CN.md",
+    "LICENSE"
+  ]
+}

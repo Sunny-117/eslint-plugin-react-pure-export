@@ -6,7 +6,7 @@
 
 ## Tasks
 
-- [ ] 1. 初始化项目结构和配置文件
+- [x] 1. 初始化项目结构和配置文件
   - 创建项目目录结构（lib/, tests/, playground/, docs/）
   - 创建 package.json 并配置依赖项
   - 创建 .gitignore 和 .npmignore
@@ -20,7 +20,7 @@
     - 实现 matchesPattern() 通用模式匹配函数
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [ ]* 2.2 编写文件模式匹配工具的测试
+  - [ ] 2.2 编写文件模式匹配工具的测试
     - **Property 7: Pure module patterns are recognized**
     - **Validates: Requirements 2.1, 2.2, 2.3**
     - 生成随机文件名，验证模式匹配的正确性
@@ -33,7 +33,7 @@
     - 实现 getImportSource() 函数，提取 import 的 source
     - _Requirements: 1.1, 1.7, 1.8, 8.5_
 
-  - [ ]* 2.4 编写 AST 辅助函数的单元测试
+  - [ ] 2.4 编写 AST 辅助函数的单元测试
     - 测试 isTypeOnlyExport 对各种 export 语法的识别
     - 测试 isRuntimeEnum 区分 const enum、declare enum 和 runtime enum
     - 测试 getExportedName 提取各种 export 形式的名称
@@ -47,7 +47,7 @@
     - 实现 isReactComponent() 函数，综合判断是否为 React 组件
     - _Requirements: 1.4, 1.5, 1.6_
 
-  - [ ]* 2.6 编写 React 组件检测器的测试
+  - [ ] 2.6 编写 React 组件检测器的测试
     - **Property 3: React components are correctly identified**
     - **Validates: Requirements 1.4, 1.5, 1.6**
     - 生成随机 React 组件（FC、memo、forwardRef），验证都能被正确识别
@@ -68,7 +68,7 @@
     - 对非组件的运行时 export 调用 context.report()
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6, 1.8_
 
-  - [ ]* 3.3 编写规则的基础单元测试
+  - [ ] 3.3 编写规则的基础单元测试
     - 测试规则只对 .tsx 文件生效
     - 测试非组件 const export 会报错
     - 测试非组件 function export 会报错
@@ -76,7 +76,7 @@
     - 测试 type/interface export 不会报错
     - _Requirements: 1.2, 1.3, 1.4_
 
-  - [ ]* 3.4 编写规则的属性测试
+  - [ ] 3.4 编写规则的属性测试
     - **Property 1: Non-component runtime exports are rejected in TSX files**
     - **Validates: Requirements 1.2**
     - 生成 100 个随机非组件运行时 export，验证都会报错
@@ -103,7 +103,7 @@
     - 生成 import 语句和 TODO 注释
     - _Requirements: 1.10_
 
-  - [ ]* 3.6 编写 fixer 的单元测试
+  - [ ] 3.6 编写 fixer 的单元测试
     - 测试 fixer 生成正确的文件名
     - 测试 fixer 生成正确的 import 语句
     - 测试 fixer 生成的代码不会破坏语法
@@ -123,7 +123,7 @@
     - 对 .tsx import 调用 context.report()
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [ ]* 4.3 编写规则的单元测试
+  - [ ] 4.3 编写规则的单元测试
     - 测试规则只对 pure module 文件生效
     - 测试 import .tsx 文件会报错
     - 测试 import .ts 文件不会报错
@@ -131,7 +131,7 @@
     - 测试错误消息包含 "pure module should not depend on tsx"
     - _Requirements: 2.4, 2.5_
 
-  - [ ]* 4.4 编写规则的属性测试
+  - [ ] 4.4 编写规则的属性测试
     - **Property 8: TSX imports are rejected in pure modules**
     - **Validates: Requirements 2.4**
     - 生成 100 个随机 pure module 文件，导入随机 .tsx 文件，验证都会报错
@@ -156,7 +156,7 @@
     - 对禁止的 import 调用 context.report()
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8_
 
-  - [ ]* 5.3 编写规则的单元测试
+  - [ ] 5.3 编写规则的单元测试
     - 测试规则只对 pure module 文件生效
     - 测试 import react 会报错
     - 测试 import react-dom 会报错
@@ -167,7 +167,7 @@
     - 测试空配置使用默认值
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8_
 
-  - [ ]* 5.4 编写规则的属性测试
+  - [ ] 5.4 编写规则的属性测试
     - **Property 10: Forbidden dependencies are rejected in pure modules**
     - **Validates: Requirements 3.2**
     - 生成 100 个随机 pure module 文件，导入随机禁止依赖，验证都会报错
@@ -183,7 +183,7 @@
     - 创建 flat/recommended 配置（Flat Config 格式）
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-  - [ ]* 6.2 编写插件入口的测试
+  - [ ] 6.2 编写插件入口的测试
     - **Property 12: All rules have complete metadata**
     - **Validates: Requirements 5.1, 5.2, 5.3**
     - 验证所有导出的规则都有 docs.description
@@ -226,7 +226,7 @@
     - 创建 playground/src/config/constants.config.ts（pure module）
     - _Requirements: 6.4_
 
-  - [ ]* 8.4 验证 playground 中的规则行为
+  - [ ] 8.4 验证 playground 中的规则行为
     - 运行 ESLint 检查 playground 代码
     - 验证 ValidComponent.tsx 没有错误
     - 验证 InvalidComponent.tsx 有预期错误
@@ -274,7 +274,7 @@
 
 ## Notes
 
-- 任务标记 `*` 的为可选任务，可以跳过以加快 MVP 开发
+- 所有任务都是必需的，确保从一开始就有全面的测试覆盖
 - 每个任务都引用了具体的需求编号，便于追溯
 - Checkpoint 任务确保增量验证
 - 属性测试验证通用正确性属性

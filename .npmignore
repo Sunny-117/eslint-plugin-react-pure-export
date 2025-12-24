@@ -1,0 +1,30 @@
+# Source files
+tests/
+playground/
+docs/examples/
+
+# Development files
+.gitignore
+.eslintrc.js
+.prettierrc
+tsconfig.json
+
+# CI/CD
+.github/
+.travis.yml
+.circleci/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+.cache/
