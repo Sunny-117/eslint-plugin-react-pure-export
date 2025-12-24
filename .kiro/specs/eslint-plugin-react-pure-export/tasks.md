@@ -176,14 +176,14 @@
     - **Validates: Requirements 3.1**
     - 生成 100 个随机配置，验证规则行为符合配置
 
-- [ ] 6. 创建插件入口和配置
-  - [ ] 6.1 实现插件主入口（lib/index.js）
+- [x] 6. 创建插件入口和配置
+  - [x] 6.1 实现插件主入口（lib/index.js）
     - 导出所有规则（rules 对象）
     - 创建 recommended 配置（Legacy Config 格式）
     - 创建 flat/recommended 配置（Flat Config 格式）
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-  - [ ] 6.2 编写插件入口的测试
+  - [x] 6.2 编写插件入口的测试
     - **Property 12: All rules have complete metadata**
     - **Validates: Requirements 5.1, 5.2, 5.3**
     - 验证所有导出的规则都有 docs.description
