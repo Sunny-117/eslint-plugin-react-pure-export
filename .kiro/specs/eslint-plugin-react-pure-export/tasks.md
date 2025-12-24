@@ -53,14 +53,14 @@
     - 生成随机 React 组件（FC、memo、forwardRef），验证都能被正确识别
     - 测试边界情况：嵌套组件、泛型组件、高阶组件
 
-- [ ] 3. 实现 no-non-component-export-in-tsx 规则
-  - [ ] 3.1 创建规则骨架和元数据
+- [x] 3. 实现 no-non-component-export-in-tsx 规则
+  - [x] 3.1 创建规则骨架和元数据
     - 创建 lib/rules/no-non-component-export-in-tsx.js
     - 定义 meta 对象（type, docs, messages, fixable, schema）
     - 实现 create 函数骨架，返回空的 visitor 对象
     - _Requirements: 5.1, 5.2, 5.3_
 
-  - [ ] 3.2 实现规则核心逻辑
+  - [x] 3.2 实现规则核心逻辑
     - 实现文件扩展名检查（仅对 .tsx 文件生效）
     - 实现 ExportNamedDeclaration visitor，检测 named export
     - 实现 ExportDefaultDeclaration visitor，检测 default export
@@ -68,7 +68,7 @@
     - 对非组件的运行时 export 调用 context.report()
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6, 1.8_
 
-  - [ ] 3.3 编写规则的基础单元测试
+  - [x] 3.3 编写规则的基础单元测试
     - 测试规则只对 .tsx 文件生效
     - 测试非组件 const export 会报错
     - 测试非组件 function export 会报错
@@ -76,7 +76,7 @@
     - 测试 type/interface export 不会报错
     - _Requirements: 1.2, 1.3, 1.4_
 
-  - [ ] 3.4 编写规则的属性测试
+  - [x] 3.4 编写规则的属性测试
     - **Property 1: Non-component runtime exports are rejected in TSX files**
     - **Validates: Requirements 1.2**
     - 生成 100 个随机非组件运行时 export，验证都会报错
@@ -97,13 +97,13 @@
     - **Validates: Requirements 8.6**
     - 生成各种 export 语法变体，验证都能正确解析和分类
 
-  - [ ] 3.5 实现 fixer 功能
+  - [x] 3.5 实现 fixer 功能
     - 实现 fix 函数，生成提取建议
     - 生成新文件名（kebab-case 转换）
     - 生成 import 语句和 TODO 注释
     - _Requirements: 1.10_
 
-  - [ ] 3.6 编写 fixer 的单元测试
+  - [x] 3.6 编写 fixer 的单元测试
     - 测试 fixer 生成正确的文件名
     - 测试 fixer 生成正确的 import 语句
     - 测试 fixer 生成的代码不会破坏语法
