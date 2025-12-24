@@ -13,41 +13,41 @@
   - 创建 LICENSE 文件（MIT）
   - _Requirements: 7.4, 7.6, 7.7_
 
-- [ ] 2. 实现工具函数模块
-  - [ ] 2.1 实现文件模式匹配工具（file-pattern-matcher.js）
+- [x] 2. 实现工具函数模块
+  - [x] 2.1 实现文件模式匹配工具（file-pattern-matcher.js）
     - 实现 isPureModule() 函数，检查文件名是否匹配 *.pure.ts, *.utils.ts, *.config.ts
     - 实现 isTsxFile() 函数，检查文件扩展名是否为 .tsx
     - 实现 matchesPattern() 通用模式匹配函数
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [ ] 2.2 编写文件模式匹配工具的测试
+  - [x] 2.2 编写文件模式匹配工具的测试
     - **Property 7: Pure module patterns are recognized**
     - **Validates: Requirements 2.1, 2.2, 2.3**
     - 生成随机文件名，验证模式匹配的正确性
     - 测试边界情况：空字符串、特殊字符、路径分隔符
 
-  - [ ] 2.3 实现 AST 辅助函数（ast-helpers.js）
+  - [x] 2.3 实现 AST 辅助函数（ast-helpers.js）
     - 实现 isTypeOnlyExport() 函数，判断 export 是否为 type-only
     - 实现 isRuntimeEnum() 函数，判断 enum 是否为 runtime enum
     - 实现 getExportedName() 函数，提取 export 的名称
     - 实现 getImportSource() 函数，提取 import 的 source
     - _Requirements: 1.1, 1.7, 1.8, 8.5_
 
-  - [ ] 2.4 编写 AST 辅助函数的单元测试
+  - [x] 2.4 编写 AST 辅助函数的单元测试
     - 测试 isTypeOnlyExport 对各种 export 语法的识别
     - 测试 isRuntimeEnum 区分 const enum、declare enum 和 runtime enum
     - 测试 getExportedName 提取各种 export 形式的名称
     - 测试 getImportSource 提取 import source 字符串
     - _Requirements: 1.1, 1.7, 1.8_
 
-  - [ ] 2.5 实现 React 组件检测器（react-component-detector.js）
+  - [x] 2.5 实现 React 组件检测器（react-component-detector.js）
     - 实现 isReactFC() 函数，检测 React.FC 类型注解
     - 实现 isReactMemo() 函数，检测 React.memo 包裹
     - 实现 isReactForwardRef() 函数，检测 React.forwardRef 包裹
     - 实现 isReactComponent() 函数，综合判断是否为 React 组件
     - _Requirements: 1.4, 1.5, 1.6_
 
-  - [ ] 2.6 编写 React 组件检测器的测试
+  - [x] 2.6 编写 React 组件检测器的测试
     - **Property 3: React components are correctly identified**
     - **Validates: Requirements 1.4, 1.5, 1.6**
     - 生成随机 React 组件（FC、memo、forwardRef），验证都能被正确识别
