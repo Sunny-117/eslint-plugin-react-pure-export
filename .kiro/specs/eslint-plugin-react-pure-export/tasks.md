@@ -226,7 +226,7 @@
     - 创建 playground/src/config/constants.config.ts（pure module）
     - _Requirements: 6.4_
 
-  - [-] 8.4 验证 playground 中的规则行为
+  - [x] 8.4 验证 playground 中的规则行为
     - 运行 ESLint 检查 playground 代码
     - 验证 ValidComponent.tsx 没有错误
     - 验证 InvalidComponent.tsx 有预期错误

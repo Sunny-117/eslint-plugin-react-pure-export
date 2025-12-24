@@ -33,9 +33,7 @@ export const enum ValidStatus {
   Inactive = 'inactive'
 }
 
-// Valid: Default export of React component
-const DefaultComponent: React.FC = () => {
+// Valid: Default export of React component (inline)
+export default function DefaultComponent() {
   return <div>Default Component</div>;
-};
-
-export default DefaultComponent;
+}
