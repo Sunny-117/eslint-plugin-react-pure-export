@@ -140,14 +140,14 @@
     - **Validates: Requirements 2.5**
     - 生成 100 个随机 pure module 文件，导入随机非 .tsx 文件，验证都不会报错
 
-- [ ] 5. 实现 no-heavy-deps-in-pure-module 规则
-  - [ ] 5.1 创建规则骨架和元数据
+- [x] 5. 实现 no-heavy-deps-in-pure-module 规则
+  - [x] 5.1 创建规则骨架和元数据
     - 创建 lib/rules/no-heavy-deps-in-pure-module.js
     - 定义 meta 对象（type, docs, messages, schema）
     - 定义 schema 支持 forbiddenDeps 和 forbiddenExtensions 配置
     - _Requirements: 5.1, 5.2, 5.3_
 
-  - [ ] 5.2 实现规则核心逻辑
+  - [x] 5.2 实现规则核心逻辑
     - 实现配置读取，设置默认值（react, react-dom, .css, .less, .scss）
     - 实现文件名模式检查
     - 实现 ImportDeclaration visitor
@@ -156,7 +156,7 @@
     - 对禁止的 import 调用 context.report()
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8_
 
-  - [ ] 5.3 编写规则的单元测试
+  - [x] 5.3 编写规则的单元测试
     - 测试规则只对 pure module 文件生效
     - 测试 import react 会报错
     - 测试 import react-dom 会报错
@@ -167,7 +167,7 @@
     - 测试空配置使用默认值
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8_
 
-  - [ ] 5.4 编写规则的属性测试
+  - [x] 5.4 编写规则的属性测试
     - **Property 10: Forbidden dependencies are rejected in pure modules**
     - **Validates: Requirements 3.2**
     - 生成 100 个随机 pure module 文件，导入随机禁止依赖，验证都会报错
