@@ -109,21 +109,21 @@
     - 测试 fixer 生成的代码不会破坏语法
     - _Requirements: 1.10_
 
-- [ ] 4. 实现 no-tsx-import-in-pure-module 规则
-  - [ ] 4.1 创建规则骨架和元数据
+- [x] 4. 实现 no-tsx-import-in-pure-module 规则
+  - [x] 4.1 创建规则骨架和元数据
     - 创建 lib/rules/no-tsx-import-in-pure-module.js
     - 定义 meta 对象（type, docs, messages, schema）
     - 实现 create 函数骨架
     - _Requirements: 5.1, 5.2, 5.3_
 
-  - [ ] 4.2 实现规则核心逻辑
+  - [x] 4.2 实现规则核心逻辑
     - 实现文件名模式检查（使用 file-pattern-matcher）
     - 实现 ImportDeclaration visitor
     - 检查 import source 是否以 .tsx 结尾
     - 对 .tsx import 调用 context.report()
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [ ] 4.3 编写规则的单元测试
+  - [x] 4.3 编写规则的单元测试
     - 测试规则只对 pure module 文件生效
     - 测试 import .tsx 文件会报错
     - 测试 import .ts 文件不会报错
@@ -131,7 +131,7 @@
     - 测试错误消息包含 "pure module should not depend on tsx"
     - _Requirements: 2.4, 2.5_
 
-  - [ ] 4.4 编写规则的属性测试
+  - [x] 4.4 编写规则的属性测试
     - **Property 8: TSX imports are rejected in pure modules**
     - **Validates: Requirements 2.4**
     - 生成 100 个随机 pure module 文件，导入随机 .tsx 文件，验证都会报错
