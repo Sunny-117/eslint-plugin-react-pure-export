@@ -7,7 +7,7 @@ import { ValidFC } from '../components/ValidComponent.tsx';
 import type { ValidProps } from '../components/ValidComponent.tsx';
 
 // Valid: Importing from .ts file is allowed
-import { formatCurrency } from './helpers.pure';
+import { formatCurrency } from './helpers.pure.ts';
 
 /**
  * This function uses a component from a .tsx file

@@ -3,20 +3,20 @@
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-react-pure-export.svg)](https://www.npmjs.com/package/eslint-plugin-react-pure-export)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-一个 ESLint 插件，用于强制执行 React 组件与纯逻辑模块的分离，提升 React Fast Refresh 稳定性和代码组织性。
+[English](./README.md) | 简体中文
 
-[English Documentation](./README.md)
+一个 ESLint 插件，用于强制分离 React 组件和纯逻辑模块，提高 React Fast Refresh 的稳定性和代码组织性。
 
 ## 动机
 
-在 React 项目中，将组件代码与纯逻辑混合会导致：
+在 React 项目中，混合组件代码和纯逻辑会导致：
 
 - **React Fast Refresh 问题**：`.tsx` 文件中的非组件导出会破坏热模块替换
 - **循环依赖**：组件从导入组件的文件中导入
-- **性能问题**：纯工具模块中加载重量级依赖（React、CSS）
+- **性能问题**：在纯工具模块中加载重型依赖（React、CSS）
 - **代码组织混乱**：UI 和业务逻辑之间的边界不清晰
 
-本插件通过三个 ESLint 规则强制执行清晰的分离。
+该插件通过三个 ESLint 规则强制执行清晰的分离。
 
 ## 安装
 
@@ -28,11 +28,11 @@ yarn add --dev eslint-plugin-react-pure-export
 pnpm add --save-dev eslint-plugin-react-pure-export
 ```
 
-**注意**：本插件需要 ESLint 8.0.0 或更高版本以及 `@typescript-eslint/parser`。
+**注意**：此插件需要 ESLint 8.0.0 或更高版本以及 `@typescript-eslint/parser`。
 
-## 使用方法
+## 使用
 
-### ESLint 9+ (Flat Config)
+### ESLint 9+（扁平配置）
 
 ```javascript
 // eslint.config.js
@@ -75,7 +75,7 @@ export default [
 ];
 ```
 
-### ESLint 8 及以下 (Legacy Config)
+### ESLint 8 及以下（传统配置）
 
 ```javascript
 // .eslintrc.js
@@ -112,11 +112,17 @@ module.exports = {
 
 禁止在 `.tsx` 文件中导出非组件的运行时代码。
 
+**注意**：包含 JSX 语法的导出是允许的，即使它们不是 React 组件，因为 JSX 需要 `.tsx` 文件。
+
 **❌ 错误示例：**
 
 ```tsx
 // Button.tsx
-export const PAGE_SIZE = 20; // ❌ 非组件导出
+export const PAGE_SIZE = 20; // ❌ 不包含 JSX 的非组件导出
+
+export function calculateTotal(a, b) { // ❌ 不包含 JSX 的纯函数
+  return a + b;
+}
 
 export const Button = () => <button>点击</button>;
 ```
@@ -126,26 +132,27 @@ export const Button = () => <button>点击</button>;
 ```tsx
 // Button.tsx
 export const Button = () => <button>点击</button>; // ✅ 组件导出
+
 export type ButtonProps = { label: string }; // ✅ 类型导出
+
+// ✅ 包含 JSX 的函数是允许的
+export function getEditor() {
+  return <div>编辑器</div>;
+}
+
+// ✅ 包含 JSX 的配置是允许的
+export const tableConfig = {
+  columns: [
+    {
+      title: '名称',
+      render: (text) => <span>{text}</span>
+    }
+  ]
+};
+
+// ✅ 包含 JSX 的变量是允许的
+export const element = <div>你好</div>;
 ```
-
-**规则详情：**
-
-此规则确保 `.tsx` 文件只导出 React 组件和类型定义，保持组件文件职责单一。
-
-**允许的导出：**
-- React 组件（React.FC、React.memo、React.forwardRef）
-- 类型定义（type、interface）
-- 类型枚举（const enum、declare enum）
-
-**禁止的导出：**
-- 常量（const、let、var）
-- 函数（非组件函数）
-- 运行时枚举（runtime enum）
-
-**自动修复：**
-
-规则提供自动修复建议，将违规导出提取到单独的 `.ts` 文件中。
 
 [📖 完整文档](./docs/rules/no-non-component-export-in-tsx.md)
 
@@ -153,31 +160,83 @@ export type ButtonProps = { label: string }; // ✅ 类型导出
 
 ### ✅ `no-tsx-import-in-pure-module`
 
-禁止在纯模块（匹配 `*.pure.ts`、`*.utils.ts` 或 `*.config.ts` 的文件）中导入 `.tsx` 文件。
+禁止在纯模块中导入 `.tsx` 文件。
+
+**默认行为**：所有 `.ts` 文件（包括 `.pure.ts`、`.utils.ts`、`.config.ts` 等）都被视为纯模块。
+
+**特性：**
+- ✅ 即使省略文件扩展名也能检测 `.tsx` 导入
+- ✅ 支持 TypeScript 路径别名（从 `tsconfig.json` 读取）
 
 **❌ 错误示例：**
 
 ```typescript
-// helpers.pure.ts
-import { Button } from './Button.tsx'; // ❌ 在纯模块中导入 .tsx
+// helpers.ts 或 helpers.pure.ts
+import { Button } from './Button.tsx'; // ❌ 显式 .tsx 导入
+import { Button } from './Button'; // ❌ 解析为 Button.tsx
+import { Button } from '@/components/Button'; // ❌ 路径别名解析为 Button.tsx
 ```
 
 **✅ 正确示例：**
 
 ```typescript
-// helpers.pure.ts
+// helpers.ts
 import { formatDate } from './date-utils'; // ✅ 导入 .ts 文件
+import { formatDate } from '@/utils/date-utils'; // ✅ 路径别名指向 .ts 文件
 import { debounce } from 'lodash'; // ✅ 导入 npm 包
 ```
 
-**规则详情：**
+**路径别名支持：**
 
-此规则防止纯逻辑模块依赖 UI 组件，保持模块边界清晰，避免循环依赖。
+该规则会自动读取 `tsconfig.json` 来解析路径别名。你也可以在 ESLint 配置中指定自定义别名。
 
-**纯模块识别模式：**
-- `*.pure.ts` - 纯逻辑模块
-- `*.utils.ts` - 工具函数
-- `*.config.ts` - 配置文件
+**选项 1：自动（从 tsconfig.json）**
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"]
+    }
+  }
+}
+```
+
+**选项 2：手动（在 ESLint 配置中）**
+
+```javascript
+{
+  'react-pure-export/no-tsx-import-in-pure-module': ['error', {
+    pathAliases: {
+      '@': './src',                    // 相对于项目根目录
+      '@components': './src/components' // 或使用绝对路径
+    }
+  }]
+}
+```
+
+该规则将正确解析：
+- `@/components/Button` → `src/components/Button.tsx` ❌
+- `@components/Button` → `src/components/Button.tsx` ❌
+- `@/utils/helper` → `src/utils/helper.ts` ✅
+
+**配置：**
+
+你可以自定义哪些文件被视为纯模块并指定路径别名：
+
+```javascript
+{
+  'react-pure-export/no-tsx-import-in-pure-module': ['error', {
+    pureModulePatterns: ['*.pure.ts', '*.utils.ts'], // 仅检查这些特定模式
+    pathAliases: {                                    // 可选：自定义路径别名
+      '@': './src',
+      '@components': './src/components'
+    }
+  }]
+}
+```
 
 [📖 完整文档](./docs/rules/no-tsx-import-in-pure-module.md)
 
@@ -185,51 +244,58 @@ import { debounce } from 'lodash'; // ✅ 导入 npm 包
 
 ### ✅ `no-heavy-deps-in-pure-module`
 
-禁止在纯模块中引入重量级依赖（React、CSS 文件）。
+禁止在纯模块中使用重型依赖（React、CSS 文件）。
 
 **❌ 错误示例：**
 
 ```typescript
-// helpers.pure.ts
+// helpers.ts
 import React from 'react'; // ❌ 在纯模块中使用 React
-import './styles.css'; // ❌ 在纯模块中导入 CSS
+import './styles.css'; // ❌ 在纯模块中使用 CSS
 ```
 
 **✅ 正确示例：**
 
 ```typescript
-// helpers.pure.ts
-export const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
+// helpers.ts
+export const formatCurrency = (amount: number) => `${amount.toFixed(2)}`;
 ```
 
-**配置选项：**
+**配置：**
 
 ```javascript
 {
   'react-pure-export/no-heavy-deps-in-pure-module': ['error', {
+    pureModulePatterns: ['*.pure.ts', '*.utils.ts'], // 仅检查这些特定模式
     forbiddenDeps: ['react', 'react-dom', 'vue'], // 自定义禁止的包
     forbiddenExtensions: ['.css', '.less', '.scss', '.sass'] // 自定义禁止的扩展名
   }]
 }
 ```
 
-**默认配置：**
-- 禁止的依赖：`react`、`react-dom`
-- 禁止的扩展名：`.css`、`.less`、`.scss`
-
-**规则详情：**
-
-此规则确保纯模块保持轻量，不引入 UI 框架或样式文件，提升加载性能和代码可测试性。
-
 [📖 完整文档](./docs/rules/no-heavy-deps-in-pure-module.md)
 
 ## 什么是纯模块？
 
-纯模块是只包含业务逻辑、工具函数或配置的文件，不包含 UI 依赖。通过命名模式识别：
+纯模块是仅包含业务逻辑、工具函数或配置而不包含 UI 依赖的文件。
 
-- `*.pure.ts` - 纯逻辑模块
-- `*.utils.ts` - 工具函数
-- `*.config.ts` - 配置文件
+**默认行为**：默认情况下，所有 `.ts` 文件（包括 `.pure.ts`、`.utils.ts`、`.config.ts` 等）都被视为纯模块。
+
+**自定义模式**：你可以使用 `pureModulePatterns` 选项配置哪些文件被视为纯模块：
+
+```javascript
+{
+  'react-pure-export/no-tsx-import-in-pure-module': ['error', {
+    pureModulePatterns: ['*.pure.ts', '*.utils.ts'] // 仅检查这些特定模式
+  }]
+}
+```
+
+常见模式：
+- `*.ts` - 所有以 .ts 结尾的 TypeScript 文件（默认，匹配 helpers.ts、helpers.pure.ts 等）
+- `*.pure.ts` - 仅纯逻辑模块
+- `*.utils.ts` - 仅工具函数
+- `*.config.ts` - 仅配置文件
 
 **优势：**
 - 更快的加载速度（无 React/CSS 开销）
@@ -237,97 +303,17 @@ export const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 - 更清晰的代码组织
 - 改进的 tree-shaking
 
-## 最佳实践
-
-### 1. 组件文件结构
-
-```
-src/
-├── components/
-│   ├── Button.tsx          # 只导出组件和类型
-│   ├── Button.types.ts     # 复杂类型定义
-│   └── button-helpers.ts   # 组件相关的工具函数
-├── utils/
-│   ├── format.pure.ts      # 纯工具函数
-│   └── validation.utils.ts # 验证工具
-└── config/
-    └── constants.config.ts # 配置常量
-```
-
-### 2. 提取常量
-
-**之前：**
-```tsx
-// Button.tsx
-export const BUTTON_SIZES = ['small', 'medium', 'large']; // ❌
-export const Button = () => <button>Click</button>;
-```
-
-**之后：**
-```typescript
-// button-constants.ts
-export const BUTTON_SIZES = ['small', 'medium', 'large']; // ✅
-```
-
-```tsx
-// Button.tsx
-import { BUTTON_SIZES } from './button-constants';
-export const Button = () => <button>Click</button>; // ✅
-```
-
-### 3. 分离业务逻辑
-
-**之前：**
-```tsx
-// UserProfile.tsx
-export const validateEmail = (email: string) => { /* ... */ }; // ❌
-export const UserProfile = () => { /* ... */ };
-```
-
-**之后：**
-```typescript
-// validation.utils.ts
-export const validateEmail = (email: string) => { /* ... */ }; // ✅
-```
-
-```tsx
-// UserProfile.tsx
-import { validateEmail } from '../utils/validation.utils';
-export const UserProfile = () => { /* ... */ }; // ✅
-```
-
-## 常见问题
-
-### Q: 为什么不能在 .tsx 文件中导出常量？
-
-A: 非组件导出会导致 React Fast Refresh 失效。当你修改组件时，整个模块会重新加载，导致状态丢失。
-
-### Q: 如何处理组件相关的类型定义？
-
-A: 类型定义可以在 .tsx 文件中导出，因为它们在编译后会被移除，不影响运行时。
-
-### Q: 可以自定义纯模块的命名模式吗？
-
-A: 目前插件使用固定的命名模式（`*.pure.ts`、`*.utils.ts`、`*.config.ts`）。如果需要自定义，欢迎提交 issue 或 PR。
-
-### Q: 规则会影响性能吗？
-
-A: 不会。规则只在 lint 阶段运行，不影响运行时性能。反而通过强制模块分离，可以提升应用性能。
-
 ## 贡献
 
-欢迎贡献！请阅读我们的[贡献指南](./CONTRIBUTING.md)了解开发流程和如何提交 Pull Request。
+欢迎贡献！请阅读我们的[贡献指南](./CONTRIBUTING.md)了解我们的开发流程以及如何提交拉取请求的详细信息。
 
 ## 许可证
 
 MIT © [eslint-plugin-react-pure-export 贡献者](https://github.com/Sunny-117/eslint-plugin-react-pure-export/graphs/contributors)
+
 
 ## 相关项目
 
 - [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react)
 - [eslint-plugin-react-hooks](https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks)
 - [@typescript-eslint/eslint-plugin](https://github.com/typescript-eslint/typescript-eslint)
-
-## 更新日志
-
-查看 [CHANGELOG.md](./CHANGELOG.md) 了解版本更新历史。

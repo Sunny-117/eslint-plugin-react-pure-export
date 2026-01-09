@@ -3,9 +3,9 @@
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-react-pure-export.svg)](https://www.npmjs.com/package/eslint-plugin-react-pure-export)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An ESLint plugin to enforce separation between React components and pure logic modules, improving React Fast Refresh stability and code organization.
-
 [中文文档](./README_CN.md)
+
+An ESLint plugin to enforce separation between React components and pure logic modules, improving React Fast Refresh stability and code organization.
 
 ## Motivation
 
@@ -112,11 +112,17 @@ module.exports = {
 
 Disallow non-component runtime exports in `.tsx` files.
 
+**Note:** Exports that contain JSX syntax are allowed, even if they're not React components, because JSX requires `.tsx` files.
+
 **❌ Incorrect:**
 
 ```tsx
 // Button.tsx
-export const PAGE_SIZE = 20; // ❌ Non-component export
+export const PAGE_SIZE = 20; // ❌ Non-component export without JSX
+
+export function calculateTotal(a, b) { // ❌ Pure function without JSX
+  return a + b;
+}
 
 export const Button = () => <button>Click</button>;
 ```
@@ -126,7 +132,26 @@ export const Button = () => <button>Click</button>;
 ```tsx
 // Button.tsx
 export const Button = () => <button>Click</button>; // ✅ Component export
+
 export type ButtonProps = { label: string }; // ✅ Type export
+
+// ✅ Function with JSX is allowed
+export function getEditor() {
+  return <div>Editor</div>;
+}
+
+// ✅ Config with JSX is allowed
+export const tableConfig = {
+  columns: [
+    {
+      title: 'Name',
+      render: (text) => <span>{text}</span>
+    }
+  ]
+};
+
+// ✅ Variable with JSX is allowed
+export const element = <div>Hello</div>;
 ```
 
 [📖 Full documentation](./docs/rules/no-non-component-export-in-tsx.md)
@@ -135,21 +160,82 @@ export type ButtonProps = { label: string }; // ✅ Type export
 
 ### ✅ `no-tsx-import-in-pure-module`
 
-Disallow importing `.tsx` files in pure modules (files matching `*.pure.ts`, `*.utils.ts`, or `*.config.ts`).
+Disallow importing `.tsx` files in pure modules.
+
+**Default behavior:** All `.ts` files (including `.pure.ts`, `.utils.ts`, `.config.ts`, etc.) are treated as pure modules.
+
+**Features:**
+- ✅ Detects `.tsx` imports even when the file extension is omitted
+- ✅ Supports TypeScript path aliases (reads from `tsconfig.json`)
 
 **❌ Incorrect:**
 
 ```typescript
-// helpers.pure.ts
-import { Button } from './Button.tsx'; // ❌ Importing .tsx in pure module
+// helpers.ts or helpers.pure.ts
+import { Button } from './Button.tsx'; // ❌ Explicit .tsx import
+import { Button } from './Button'; // ❌ Resolves to Button.tsx
+import { Button } from '@/components/Button'; // ❌ Path alias resolves to Button.tsx
 ```
 
 **✅ Correct:**
 
 ```typescript
-// helpers.pure.ts
+// helpers.ts
 import { formatDate } from './date-utils'; // ✅ Importing .ts file
+import { formatDate } from '@/utils/date-utils'; // ✅ Path alias to .ts file
 import { debounce } from 'lodash'; // ✅ Importing npm package
+```
+
+**Path Alias Support:**
+
+The rule automatically reads `tsconfig.json` to resolve path aliases. You can also specify custom aliases in ESLint configuration.
+
+**Option 1: Automatic (from tsconfig.json)**
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"]
+    }
+  }
+}
+```
+
+**Option 2: Manual (in ESLint config)**
+
+```javascript
+{
+  'react-pure-export/no-tsx-import-in-pure-module': ['error', {
+    pathAliases: {
+      '@': './src',                    // Relative to project root
+      '@components': './src/components' // Or use absolute paths
+    }
+  }]
+}
+```
+
+The rule will correctly resolve:
+- `@/components/Button` → `src/components/Button.tsx` ❌
+- `@components/Button` → `src/components/Button.tsx` ❌
+- `@/utils/helper` → `src/utils/helper.ts` ✅
+
+**Configuration:**
+
+You can customize which files are treated as pure modules and specify path aliases:
+
+```javascript
+{
+  'react-pure-export/no-tsx-import-in-pure-module': ['error', {
+    pureModulePatterns: ['*.pure.ts', '*.utils.ts'], // Only check these specific patterns
+    pathAliases: {                                    // Optional: custom path aliases
+      '@': './src',
+      '@components': './src/components'
+    }
+  }]
+}
 ```
 
 [📖 Full documentation](./docs/rules/no-tsx-import-in-pure-module.md)
@@ -163,7 +249,7 @@ Disallow heavy dependencies (React, CSS files) in pure modules.
 **❌ Incorrect:**
 
 ```typescript
-// helpers.pure.ts
+// helpers.ts
 import React from 'react'; // ❌ React in pure module
 import './styles.css'; // ❌ CSS in pure module
 ```
@@ -171,7 +257,7 @@ import './styles.css'; // ❌ CSS in pure module
 **✅ Correct:**
 
 ```typescript
-// helpers.pure.ts
+// helpers.ts
 export const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 ```
 
@@ -180,6 +266,7 @@ export const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 ```javascript
 {
   'react-pure-export/no-heavy-deps-in-pure-module': ['error', {
+    pureModulePatterns: ['*.pure.ts', '*.utils.ts'], // Only check these specific patterns
     forbiddenDeps: ['react', 'react-dom', 'vue'], // Custom forbidden packages
     forbiddenExtensions: ['.css', '.less', '.scss', '.sass'] // Custom forbidden extensions
   }]
@@ -190,11 +277,25 @@ export const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 
 ## What are Pure Modules?
 
-Pure modules are files that contain only business logic, utilities, or configuration without UI dependencies. They are identified by naming patterns:
+Pure modules are files that contain only business logic, utilities, or configuration without UI dependencies.
 
-- `*.pure.ts` - Pure logic modules
-- `*.utils.ts` - Utility functions
-- `*.config.ts` - Configuration files
+**Default behavior:** By default, all `.ts` files (including `.pure.ts`, `.utils.ts`, `.config.ts`, etc.) are treated as pure modules.
+
+**Custom patterns:** You can configure which files are treated as pure modules using the `pureModulePatterns` option:
+
+```javascript
+{
+  'react-pure-export/no-tsx-import-in-pure-module': ['error', {
+    pureModulePatterns: ['*.pure.ts', '*.utils.ts'] // Only check these specific patterns
+  }]
+}
+```
+
+Common patterns:
+- `*.ts` - All TypeScript files ending with .ts (default, matches helpers.ts, helpers.pure.ts, etc.)
+- `*.pure.ts` - Only pure logic modules
+- `*.utils.ts` - Only utility functions
+- `*.config.ts` - Only configuration files
 
 **Benefits:**
 - Faster loading (no React/CSS overhead)
@@ -209,6 +310,7 @@ Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.m
 ## License
 
 MIT © [eslint-plugin-react-pure-export contributors](https://github.com/Sunny-117/eslint-plugin-react-pure-export/graphs/contributors)
+
 
 ## Related Projects
 

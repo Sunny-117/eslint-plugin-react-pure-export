@@ -45,16 +45,15 @@ async function runTests() {
   
   console.log('📋 Testing rule only applies to pure module files:\n');
   
-  // Test 1: Rule should not apply to regular .ts files
+  // Test 1: Rule should NOT apply to regular .ts files by default (new behavior)
   try {
     const code1 = 'import React from "react";';
     const result1 = await lintCode(code1, 'regular.ts');
-    if (result1.messages.length === 0) {
-      console.log('✅ PASS: Rule does not apply to regular .ts files');
+    if (result1.messages.length > 0) {
+      console.log('✅ PASS: Rule applies to .ts files (new default)');
       passed++;
     } else {
-      console.log('❌ FAIL: Rule should not apply to regular .ts files');
-      console.log('  Messages:', result1.messages);
+      console.log('❌ FAIL: Rule should apply to .ts files (new default)');
       failed++;
     }
   } catch (e) {
@@ -62,15 +61,15 @@ async function runTests() {
     failed++;
   }
   
-  // Test 2: Rule should apply to *.pure.ts files
+  // Test 2: Rule should apply to *.pure.ts files with custom config
   try {
     const code2 = 'import React from "react";';
-    const result2 = await lintCode(code2, 'helpers.pure.ts');
+    const result2 = await lintCode(code2, 'helpers.pure.ts', { pureModulePatterns: ['*.pure.ts'] });
     if (result2.messages.length > 0) {
-      console.log('✅ PASS: Rule applies to *.pure.ts files');
+      console.log('✅ PASS: Rule applies to *.pure.ts files with custom config');
       passed++;
     } else {
-      console.log('❌ FAIL: Rule should apply to *.pure.ts files');
+      console.log('❌ FAIL: Rule should apply to *.pure.ts files with custom config');
       failed++;
     }
   } catch (e) {
@@ -80,10 +79,10 @@ async function runTests() {
   
   console.log('\n📋 Testing default forbidden dependencies:\n');
   
-  // Test 3: Import react should error
+  // Test 3: Import react should error in .ts files
   try {
     const code3 = 'import React from "react";';
-    const result3 = await lintCode(code3, 'helpers.pure.ts');
+    const result3 = await lintCode(code3, 'helpers.ts');
     if (result3.messages.length > 0 && 
         result3.messages[0].messageId === 'heavyDepInPureModule') {
       console.log('✅ PASS: Import react triggers error');
@@ -98,10 +97,10 @@ async function runTests() {
     failed++;
   }
   
-  // Test 4: Import react-dom should error
+  // Test 4: Import react-dom should error in .ts files
   try {
     const code4 = 'import ReactDOM from "react-dom";';
-    const result4 = await lintCode(code4, 'helpers.pure.ts');
+    const result4 = await lintCode(code4, 'helpers.ts');
     if (result4.messages.length > 0 && 
         result4.messages[0].messageId === 'heavyDepInPureModule') {
       console.log('✅ PASS: Import react-dom triggers error');
@@ -121,7 +120,7 @@ async function runTests() {
   // Test 5: Import .css file should error
   try {
     const code5 = 'import "./styles.css";';
-    const result5 = await lintCode(code5, 'helpers.pure.ts');
+    const result5 = await lintCode(code5, 'helpers.ts');
     if (result5.messages.length > 0 && 
         result5.messages[0].messageId === 'heavyDepInPureModule') {
       console.log('✅ PASS: Import .css file triggers error');
@@ -139,7 +138,7 @@ async function runTests() {
   // Test 6: Import .less file should error
   try {
     const code6 = 'import "./styles.less";';
-    const result6 = await lintCode(code6, 'helpers.pure.ts');
+    const result6 = await lintCode(code6, 'helpers.ts');
     if (result6.messages.length > 0 && 
         result6.messages[0].messageId === 'heavyDepInPureModule') {
       console.log('✅ PASS: Import .less file triggers error');
@@ -157,7 +156,7 @@ async function runTests() {
   // Test 7: Import .scss file should error
   try {
     const code7 = 'import "./styles.scss";';
-    const result7 = await lintCode(code7, 'helpers.pure.ts');
+    const result7 = await lintCode(code7, 'helpers.ts');
     if (result7.messages.length > 0 && 
         result7.messages[0].messageId === 'heavyDepInPureModule') {
       console.log('✅ PASS: Import .scss file triggers error');
@@ -178,7 +177,7 @@ async function runTests() {
   try {
     const code8 = 'import axios from "axios";';
     const options8 = { forbiddenDeps: ['axios', 'lodash'] };
-    const result8 = await lintCode(code8, 'helpers.pure.ts', options8);
+    const result8 = await lintCode(code8, 'helpers.ts', options8);
     if (result8.messages.length > 0 && 
         result8.messages[0].messageId === 'heavyDepInPureModule') {
       console.log('✅ PASS: Custom forbidden dependencies are respected');
@@ -197,7 +196,7 @@ async function runTests() {
   try {
     const code9 = 'import "./image.png";';
     const options9 = { forbiddenExtensions: ['.png', '.jpg'] };
-    const result9 = await lintCode(code9, 'helpers.pure.ts', options9);
+    const result9 = await lintCode(code9, 'helpers.ts', options9);
     if (result9.messages.length > 0 && 
         result9.messages[0].messageId === 'heavyDepInPureModule') {
       console.log('✅ PASS: Custom forbidden extensions are respected');
@@ -216,7 +215,7 @@ async function runTests() {
   try {
     const code10 = 'import React from "react";';
     const options10 = {};
-    const result10 = await lintCode(code10, 'helpers.pure.ts', options10);
+    const result10 = await lintCode(code10, 'helpers.ts', options10);
     if (result10.messages.length > 0 && 
         result10.messages[0].messageId === 'heavyDepInPureModule') {
       console.log('✅ PASS: Empty configuration uses default values');
@@ -236,7 +235,7 @@ async function runTests() {
   // Test 11: Import allowed npm package should not error
   try {
     const code11 = 'import { format } from "date-fns";';
-    const result11 = await lintCode(code11, 'helpers.pure.ts');
+    const result11 = await lintCode(code11, 'helpers.ts');
     if (result11.messages.length === 0) {
       console.log('✅ PASS: Import allowed npm package does not trigger error');
       passed++;
@@ -253,7 +252,7 @@ async function runTests() {
   // Test 12: Import .ts file should not error
   try {
     const code12 = 'import { helper } from "./helper.ts";';
-    const result12 = await lintCode(code12, 'helpers.pure.ts');
+    const result12 = await lintCode(code12, 'helpers.ts');
     if (result12.messages.length === 0) {
       console.log('✅ PASS: Import .ts file does not trigger error');
       passed++;
@@ -270,7 +269,7 @@ async function runTests() {
   // Test 13: Import .json file should not error
   try {
     const code13 = 'import config from "./config.json";';
-    const result13 = await lintCode(code13, 'helpers.pure.ts');
+    const result13 = await lintCode(code13, 'helpers.ts');
     if (result13.messages.length === 0) {
       console.log('✅ PASS: Import .json file does not trigger error');
       passed++;
@@ -289,7 +288,7 @@ async function runTests() {
   // Test 14: Error message should contain expected text
   try {
     const code14 = 'import React from "react";';
-    const result14 = await lintCode(code14, 'helpers.pure.ts');
+    const result14 = await lintCode(code14, 'helpers.ts');
     if (result14.messages.length > 0) {
       const message = result14.messages[0].message;
       if (message.includes('Pure module') && 

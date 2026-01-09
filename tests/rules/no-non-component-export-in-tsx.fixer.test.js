@@ -88,7 +88,7 @@ async function runTests() {
     const code3 = 'export const PAGE_SIZE = 20;';
     const result3 = await lintAndFix(code3, 'test.tsx');
     
-    if (result3.output && result3.output.includes('page_size.ts')) {
+    if (result3.output && result3.output.includes('page-size.ts')) {
       console.log('✅ PASS: Fixer handles SCREAMING_SNAKE_CASE');
       passed++;
     } else {
