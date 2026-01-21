@@ -114,6 +114,49 @@ Disallow non-component runtime exports in `.tsx` files.
 
 **Note:** Exports that contain JSX syntax are allowed, even if they're not React components, because JSX requires `.tsx` files.
 
+**Supported React Component Patterns:**
+
+The rule uses intelligent heuristics to recognize React components without relying on hardcoded function names:
+
+1. **Type Annotations**: Components with `React.FC` or `React.FunctionComponent` type annotation
+2. **React APIs**: Components wrapped with `React.memo()` or `React.forwardRef()`
+3. **HOC Pattern Detection** (Heuristic-based):
+   - Functions starting with `with` (e.g., `withAuth`, `withBoundary`, `withRouter`, `withStyles`, etc.)
+   - Known wrapper functions (`memo`, `forwardRef`, `observer`, `connect`, `inject`, `compose`)
+   - Must have a component-like argument:
+     - PascalCase identifier (e.g., `MyComponent`)
+     - Arrow function or function expression
+     - Another HOC call (for chaining)
+
+**How HOC Detection Works:**
+
+The rule analyzes the code structure to determine if an export is a component:
+
+```tsx
+// ✅ Recognized: Function name starts with 'with' + PascalCase argument
+export default withAuth(MyComponent);
+
+// ✅ Recognized: Function name starts with 'with' + function argument
+export const Protected = withPermissions(() => <div>Protected</div>);
+
+// ✅ Recognized: Known wrapper + component argument
+export default compose(MyComponent);
+
+// ✅ Recognized: Chained HOCs
+export default withAuth(withRouter(MyComponent));
+
+// ❌ Not recognized: 'with' prefix but non-component argument
+export const config = withDefaults(42); // Triggers error
+
+// ❌ Not recognized: camelCase argument (not a component)
+export const result = withSomething(myHelper); // Triggers error
+```
+
+This approach is more robust than hardcoded name lists because:
+- Works with any custom HOC following naming conventions
+- Validates that the argument looks like a component
+- No need to update the plugin when adding new HOCs
+
 **❌ Incorrect:**
 
 ```tsx
@@ -134,6 +177,30 @@ export const Button = () => <button>Click</button>;
 export const Button = () => <button>Click</button>; // ✅ Component export
 
 export type ButtonProps = { label: string }; // ✅ Type export
+
+// ✅ React.FC component
+export const Home: React.FC = () => <div>Home</div>;
+
+// ✅ React.memo wrapped component
+export const MemoizedButton = React.memo(() => <button>Click</button>);
+
+// ✅ React.forwardRef wrapped component
+export const ForwardedButton = React.forwardRef((props, ref) => (
+  <button ref={ref}>Click</button>
+));
+
+// ✅ HOC wrapped component (any 'with*' function)
+import { withBoundary } from '@/components/ErrorBoundary';
+import { withAuth } from '@/hocs/withAuth';
+const MyComponent = () => <div>Hello</div>;
+export default withBoundary(MyComponent);
+export const Protected = withAuth(MyComponent);
+
+// ✅ Multiple HOCs chained
+export default withBoundary(withRouter(MyComponent));
+
+// ✅ Known wrapper functions (compose, inject, etc.)
+export default compose(MyComponent);
 
 // ✅ Function with JSX is allowed
 export function getEditor() {
