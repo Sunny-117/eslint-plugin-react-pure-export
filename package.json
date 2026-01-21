@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-react-pure-export",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ESLint plugin to enforce separation between React components and pure logic modules",
   "main": "lib/index.js",
   "keywords": [
