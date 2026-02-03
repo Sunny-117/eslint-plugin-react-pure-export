@@ -13,6 +13,7 @@ const testFiles = [
   'tests/rules/no-non-component-export-in-tsx.fixer.test.js',
   'tests/rules/no-tsx-import-in-pure-module.test.js',
   'tests/rules/no-tsx-import-in-pure-module.alias.test.js',
+  'tests/rules/no-non-component-export-in-tsx.forwardref-with-type-assertion.test.js',
   'tests/rules/no-heavy-deps-in-pure-module.test.js',
 ];
 
