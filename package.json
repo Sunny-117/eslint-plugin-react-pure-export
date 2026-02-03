@@ -29,7 +29,12 @@
     "test": "node tests/run-all-tests.js",
     "test:rules": "node tests/rules/run-rule-tests.js",
     "test:utils": "node tests/utils/run-util-tests.js",
-    "lint": "eslint lib tests"
+    "lint": "eslint lib tests",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "version": "npm run changelog && git add CHANGELOG.md",
+    "release": "npm run test && npm run lint && npm version patch -m 'chore: release v%s' && git push --follow-tags && npm publish",
+    "release:minor": "npm run test && npm run lint && npm version minor -m 'chore: release v%s' && git push --follow-tags && npm publish",
+    "release:major": "npm run test && npm run lint && npm version major -m 'chore: release v%s' && git push --follow-tags && npm publish"
   },
   "peerDependencies": {
     "eslint": ">=8.0.0"
@@ -38,7 +43,8 @@
     "@typescript-eslint/parser": "^6.0.0 || ^7.0.0 || ^8.0.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.0"
+    "eslint": "^8.57.0",
+    "conventional-changelog-cli": "^4.1.0"
   },
   "files": [
     "lib",
